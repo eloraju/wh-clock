@@ -1,1 +1,1 @@
-export type Turn = "A"|"B"|"PAUSE";
+export type Turn = "A" | "B" | "PAUSE" | "END";
