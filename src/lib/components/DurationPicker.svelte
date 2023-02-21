@@ -1,6 +1,6 @@
 <script lang="ts">
   import SubButton from '$lib/components/SubButton.svelte';
-  let duration = 1.5 * 60 * 60 // 1.5h
+  export let duration = 1.5 * 60 * 60 // 1.5h
 
   $: hours = Math.floor(duration / 3600)
   $: minutes = Math.floor((duration/60))%60 || "00"

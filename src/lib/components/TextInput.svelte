@@ -2,6 +2,7 @@
     export let label: string;
     export let value: string;
     export let name: string;
+    export let required = false;
 </script>
 
 <div class="flex- flex-row gap-2">
@@ -10,7 +11,7 @@
     >
     <input
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
-        required
+        {required}
         bind:value
         type="text"
         {name}

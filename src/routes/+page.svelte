@@ -2,9 +2,16 @@
     import TextInput from "$lib/components/TextInput.svelte";
     import StartPicker from "$lib/components/StartPicker.svelte";
     import DurationPicker from "$lib/components/DurationPicker.svelte";
+    import SelectInput from "../lib/components/SelectInput.svelte";
+    import {armies} from '$lib/assets/icons/armies.ts'
+
+    const armyNames = armies.map(a => a.name).sort();
 
     let playerAName: string;
     let playerBName: string;
+    // These are not actually used and can be deleted at some point :)
+    let playerAArmy: string;
+    let playerBArmy: string;
     let duration: string;
     let startingPlayer: string;
     let oldGameID: string;
@@ -23,30 +30,36 @@
                     label="Player A name"
                     name="playerA"
                     bind:value={playerAName}
+                    required={true}
                 />
                 <TextInput
                     label="Player B name"
                     name="playerB"
                     bind:value={playerBName}
+                    required={true}
                 />
             </div>
             <div class="flex flex-row gap-5">
-                <TextInput
-                        label="Player A name"
-                        name="playerA"
-                        bind:value={playerAName}
+                <SelectInput
+                        label="Player A army"
+                        name="armyA"
+                        values={armyNames}
+                        bind:value={playerAArmy}
+                        required={true}
                 />
-                <TextInput
-                        label="Player B name"
-                        name="playerB"
-                        bind:value={playerBName}
+                <SelectInput
+                        label="Player B army"
+                        name="armyB"
+                        values={armyNames}
+                        bind:value={playerBArmy}
+                        required={true}
                 />
             </div>
             <div class="flex flex-row gap-5">
-                <DurationPicker />
+                <DurationPicker bind:duration={duration}/>
             </div>
             <div class="flex flex-row gap-5">
-                <StartPicker disabled={startDisabled} {players} />
+                <StartPicker disabled={startDisabled} {players} bind:startingPlayer={startingPlayer}/>
             </div>
             <button type="submit" class="bg-green-800 p-3 rounded-xl">Start a new game</button>
         </div>

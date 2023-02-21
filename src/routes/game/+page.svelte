@@ -3,10 +3,12 @@
   import type {GameState} from "$lib/types";
   import {match} from "ts-pattern";
   import GameModal from "./GameModal.svelte";
+  import {armies} from "../../lib/assets/icons/armies.js";
+
 
   export let data;
 
-  let {playerA, playerB, gameTime, startingPlayer} = data;
+  let {playerA, playerB, gameTime, startingPlayer, armyA, armyB} = data;
   gameTime = parseFloat(gameTime);
 
   let turnNumber = 1;
@@ -18,6 +20,8 @@
 
   let playerAGameTimer = gameTime;
   let playerBGameTimer = gameTime;
+  let armyAData = armies.find(a => a.name === armyA)
+  let armyBData = armies.find(a => a.name === armyB)
 
   let showModal = true;
 
@@ -117,11 +121,15 @@
                 active={gameState === "A"}
                 playerName={playerA}
                 bind:durationLeft={playerAGameTimer}
+                icon={armyAData.icon}
+                {...armyAData.colors}
         />
         <PlayerContainer
                 active={gameState === "B"}
                 playerName={playerB}
                 bind:durationLeft={playerBGameTimer}
+                icon={armyBData.icon}
+                {...armyBData.colors}
         />
     </div>
 </div>

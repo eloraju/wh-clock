@@ -1,6 +1,6 @@
 <script lang="ts">
     export let players: string[];
-    export let disabled: boolean = true;
+    export let disabled = true;
     export let startingPlayer: "A" | "B" | "" = "";
 </script>
 
