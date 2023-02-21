@@ -1,5 +1,6 @@
 <script lang="ts">
     import aquila from "$lib/assets/aquila_full.png";
+    import {createEventDispatcher} from "svelte";
     export let active = false;
     export let playerName = "NONAME";
     export let durationLeft: number;
@@ -32,7 +33,7 @@
     <h2 class="font-bold text-7xl ">{playerName}</h2>
     {#if active}
         <img
-            class="opacity-20 z-0 absolute w-full h-full"
+            class="opacity-20 z-0 absolute w-[80%]"
             src={aquila}
             alt="Active player"
         />

@@ -1,110 +1,128 @@
 <script lang="ts">
-    import aquila from "$lib/assets/aquila.png";
-    import PlayerContainer from "$lib/components/PlayerContainer.svelte";
-    import type { Turn } from "$lib/types";
-    import { match } from "ts-pattern";
+  import PlayerContainer from "$lib/components/PlayerContainer.svelte";
+  import type {GameState} from "$lib/types";
+  import {match} from "ts-pattern";
+  import GameModal from "./GameModal.svelte";
 
-    export let data;
+  export let data;
 
-    let { playerA, playerB, gameTime, startingPlayer } = data;
-    gameTime = parseFloat(gameTime);
+  let {playerA, playerB, gameTime, startingPlayer} = data;
+  gameTime = parseFloat(gameTime);
 
-    let turnNumber = 1;
-    let turnHalf = 1;
+  let turnNumber = 1;
+  let turnHalf = 1;
 
-    let turn: Turn = startingPlayer;
-    let previousTurn: Turn = "B";
+  let gameState: GameState = "START";
+  let previousTurn: GameState = startingPlayer === "A" ? "A" : "B";
+  let startingPlayerName = startingPlayer === "A" ? playerA : playerB;
 
-    let playerAGameTimer = gameTime;
-    let playerBGameTimer = gameTime;
+  let playerAGameTimer = gameTime;
+  let playerBGameTimer = gameTime;
 
-    $: turnString = () => {
-        if (turnNumber < 6) {
-            return `${turnNumber} - ${turnHalf}`;
-        }
-        turn = "END";
-        return "THE END";
-    };
-    const ticker = setInterval(() => {
-        match(turn)
-            .with("A", () => (playerAGameTimer = Math.max(0,playerAGameTimer - 1)))
-            .with("B", () => (playerBGameTimer = Math.max(0,playerBGameTimer - 1)))
-            .with("PAUSE", () => {})
-            .with("END", () => {clearInterval(ticker)})
-            .exhaustive();
-    }, 1000);
+  let showModal = true;
 
-    function nextTurn() {
-        if (turn === "PAUSE") {
-            turn = previousTurn;
-        } else {
-            turn = turn === "A" ? "B" : "A";
-        }
+  $: turnString = () => {
+    if (turnNumber < 6) {
+      return `${turnNumber} - ${turnHalf}`;
     }
+    gameState = "END";
+    return "THE END";
+  };
+  $: playerAfterPause = previousTurn === "A" ? playerA : playerB;
+  const ticker = setInterval(() => {
+    match(gameState)
+      .with("A", () => (playerAGameTimer = Math.max(0, playerAGameTimer - 1)))
+      .with("B", () => (playerBGameTimer = Math.max(0, playerBGameTimer - 1)))
+      .with("PAUSE", () => {})
+      .with("START", () => {})
+      .with("END", () => {clearInterval(ticker);})
+      .exhaustive();
+  }, 1000);
 
-    function togglePause() {
-        if (turn === "PAUSE") {
-            turn = previousTurn;
-        } else {
-            previousTurn = turn;
-            turn = "PAUSE";
-        }
+  function switchActive() {
+    if (gameState === "PAUSE") {
+      showModal = false;
+      gameState = previousTurn;
+    } else {
+      // Just in case...
+      showModal = false;
+      gameState = gameState === "A" ? "B" : "A";
     }
+  }
 
-    function increaseTurnNumber() {
-        turnHalf = (turnHalf % 2) + 1;
-        if (turnHalf === 1) {
-            turnNumber = turnNumber + 1;
-        }
+  function togglePause() {
+    if (gameState === "PAUSE" || gameState === "START") {
+      showModal = false;
+      gameState = previousTurn;
+    } else {
+      previousTurn = gameState;
+      gameState = "PAUSE";
+      showModal = true;
     }
+  }
 
-    function handleKeyPress(event: KeyboardEvent) {
-        if (event.repeat) return;
-
-        console.log(event.code);
-        match(event.code)
-        .with("Space", ()=> {event.preventDefault(); nextTurn()})
-        .with("Enter", ()=> {event.preventDefault(); togglePause()})
-        .with("KeyT", ()=> {event.preventDefault(); increaseTurnNumber()})
-        .otherwise(()=>{})
+  function increaseTurnNumber() {
+    turnHalf = (turnHalf % 2) + 1;
+    if (turnHalf === 1) {
+      turnNumber = turnNumber + 1;
     }
+  }
+
+  function handleKeyPress(event: KeyboardEvent) {
+    if (event.repeat) return;
+
+    console.log(event.code);
+    match(event.code)
+      .with("Space", () => {
+        event.preventDefault();
+        switchActive()
+      })
+      .with("Enter", () => {
+        event.preventDefault();
+        togglePause()
+      })
+      .with("KeyT", () => {
+        event.preventDefault();
+        increaseTurnNumber()
+      })
+      .otherwise(() => {
+      })
+  }
 </script>
 
-<svelte:window on:keypress={handleKeyPress} />
+<svelte:window on:keypress={handleKeyPress}/>
 <div class="w-full h-screen flex flex-col">
     <div
-        class="flex flex-col h-16 bg-green-800 text-center text-xl font-bold italic"
+            class="flex flex-col h-16 bg-green-800 text-center text-xl font-bold italic"
     >
-    {#if turn!=="END"}
-        <button on:click={() => increaseTurnNumber()}>{turnString()}</button>
-        <div class="flex flex-row gap-6 justify-center">
-            {#if turn !== "PAUSE"}
+        {#if gameState !== "END"}
+            <button on:click={() => increaseTurnNumber()}>{turnString()}</button>
+            <div class="flex flex-row gap-6 justify-center">
+                {#if gameState !== "PAUSE"}
+                    <button on:click={() => {switchActive()}}>Switch active player</button
+                    >
+                {/if}
                 <button
-                    on:click={() => {
-                        nextTurn();
-                    }}>Next turn</button
-                >
-            {/if}
-            <button
-                on:click={() => {
+                        on:click={() => {
                     togglePause();
-                }}>{turn === "PAUSE" ? "Resume" : "Pause"}</button
-            >
-        </div>
+                }}>{gameState === "PAUSE" ? "Resume" : "Pause"}</button
+                >
+            </div>
         {:else}
-        <span class="text-xl font-bold">THE END</span>
+            <span class="text-xl font-bold">THE END</span>
         {/if}
     </div>
-    <div class="h-full flex flex-row">
+    <div class="h-full flex flex-row" on:click={()=>switchActive()}>
         <PlayerContainer
-            active={turn === "A"}
-            playerName={playerA}
-            bind:durationLeft={playerAGameTimer}
+                active={gameState === "A"}
+                playerName={playerA}
+                bind:durationLeft={playerAGameTimer}
         />
         <PlayerContainer
-            active={turn === "B"}
-            playerName={playerB}
-            bind:durationLeft={playerBGameTimer}
+                active={gameState === "B"}
+                playerName={playerB}
+                bind:durationLeft={playerBGameTimer}
         />
     </div>
 </div>
+<GameModal {showModal} {gameState} {playerAfterPause} {startingPlayerName}/>

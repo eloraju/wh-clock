@@ -26,6 +26,7 @@ export const actions: Actions = {
             303,
             `/game?pa=${playerA}&pb=${playerB}&dur=${duration}&start=${startingPlayer}`
         );
+
     },
     resume: async (event: RequestEvent) => {
         throw redirect(303, "/");

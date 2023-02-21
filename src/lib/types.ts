@@ -1,1 +1,1 @@
-export type Turn = "A" | "B" | "PAUSE" | "END";
+export type GameState = "A" | "B" | "PAUSE" | "END" | "START";

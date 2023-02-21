@@ -31,6 +31,18 @@
                 />
             </div>
             <div class="flex flex-row gap-5">
+                <TextInput
+                        label="Player A name"
+                        name="playerA"
+                        bind:value={playerAName}
+                />
+                <TextInput
+                        label="Player B name"
+                        name="playerB"
+                        bind:value={playerBName}
+                />
+            </div>
+            <div class="flex flex-row gap-5">
                 <DurationPicker />
             </div>
             <div class="flex flex-row gap-5">
