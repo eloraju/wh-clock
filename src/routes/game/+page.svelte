@@ -3,7 +3,7 @@
   import type {GameState} from "$lib/types";
   import {match} from "ts-pattern";
   import GameModal from "./GameModal.svelte";
-  import {armies} from "../../lib/assets/icons/armies.js";
+  import {armies, type Army} from "../../lib/assets/icons/armies.js";
 
 
   export let data;
@@ -20,8 +20,8 @@
 
   let playerAGameTimer = gameTime;
   let playerBGameTimer = gameTime;
-  let armyAData = armies.find(a => a.name === armyA)
-  let armyBData = armies.find(a => a.name === armyB)
+  let armyAData: Army = armies.find(a => a.name === armyA) as Army
+  let armyBData: Army = armies.find(a => a.name === armyB) as Army
 
   let showModal = true;
 
@@ -116,20 +116,20 @@
             <span class="text-xl font-bold">THE END</span>
         {/if}
     </div>
-    <div class="h-full flex flex-row" on:click={()=>switchActive()}>
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!--<div class="h-full flex flex-row" on:click={()=>switchActive()}>-->
+    <div class="h-full flex flex-row">
         <PlayerContainer
                 active={gameState === "A"}
                 playerName={playerA}
                 bind:durationLeft={playerAGameTimer}
-                icon={armyAData.icon}
-                {...armyAData.colors}
+                army={armyAData}
         />
         <PlayerContainer
                 active={gameState === "B"}
                 playerName={playerB}
                 bind:durationLeft={playerBGameTimer}
-                icon={armyBData.icon}
-                {...armyBData.colors}
+                army={armyBData}
         />
     </div>
 </div>
