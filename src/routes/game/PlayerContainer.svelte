@@ -82,7 +82,7 @@
             )}</div
         >
     </div>
-    <PointTracker/>
+    <PointTracker secondaries={["Raise the banners", "Psychic interrigation", "Take no prisoners"]}/>
 </div>
 
 <style lang="postcss">

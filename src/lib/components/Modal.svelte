@@ -22,7 +22,7 @@
 <!-- svelte-ignore ally-autofocus -->
 <div class="modal-bg"></div>
 
-<div class="modal" role="dialog" bind:this={modal}>
+<div class="modal flex flex-col" role="dialog" bind:this={modal}>
   <slot name="header"></slot>
   <slot name="body"></slot>
 </div>

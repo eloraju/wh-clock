@@ -1,5 +1,5 @@
 <script lang="ts">
-  import PlayerContainer from "$lib/components/PlayerContainer.svelte";
+  import PlayerContainer from "./PlayerContainer.svelte";
   import type {GameState} from "$lib/types";
   import {match} from "ts-pattern";
   import GameModal from "./GameModal.svelte";
