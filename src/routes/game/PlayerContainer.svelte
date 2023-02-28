@@ -1,6 +1,7 @@
 <script lang="ts">
     import aquila from "$lib/assets/aquila_full.png";
     import type { Army } from "$lib/assets/icons/armies";
+    import PlayerClock from "./PlayerClock.svelte";
     import PointTracker from "./PointTracker.svelte";
     export let active = false;
     export let playerName = "NONAME";
@@ -66,22 +67,7 @@
     class:overtime={goneOver}
     style={cssVarStyles}
 >
-    <div class="relative flex flex-col justify-start text-center">
-        <h1 class="font-bold text-7xl z-10">{playerName}</h1>
-        <h2 class="font-light text-3xl z-10">{army.name}</h2>
-        {#if active}
-            <img
-                class="opacity-20 z-0 absolute self-center w-[80%]"
-                src={icon}
-                alt="Active player"
-            />
-        {/if}
-        <div class="z-10"
-            >{prefixWith0(hours)}:{prefixWith0(minutes)}:{prefixWith0(
-                seconds
-            )}</div
-        >
-    </div>
+    <PlayerClock {army} {durationLeft} {playerName} {active}/>
     <PointTracker secondaries={["Raise the banners", "Psychic interrigation", "Take no prisoners"]}/>
 </div>
 
