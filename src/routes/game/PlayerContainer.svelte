@@ -1,5 +1,4 @@
 <script lang="ts">
-    import aquila from "$lib/assets/aquila_full.png";
     import type { Army } from "$lib/assets/icons/armies";
     import PlayerClock from "./PlayerClock.svelte";
     import PointTracker from "./PointTracker.svelte";
@@ -8,7 +7,6 @@
     export let durationLeft: number;
     export let army: Army;
 
-    let icon = army.icon ?? aquila;
 
     // Coloring variables
     let activeBg = army.colors?.activeBg ?? "#060";
@@ -35,29 +33,7 @@
       .map(([k,v]) => `--${k}:${v}`)
       .join(";")
 
-    console.log(`${playerName} colors`, cssVarStyles, styles)
-
-
-    let hours = 0;
-    let minutes = 0;
-    let seconds = 0;
-
-    // this gets called any time durationLeft changes
-    $: _ = calculateTimes(durationLeft)
     $: goneOver= durationLeft <= 0;
-
-    function prefixWith0(num: Number): string {
-        if (num < 10) {
-            return `0${num}`;
-        }
-        return `${num}`;
-    }
-
-    function calculateTimes(duration: number) {
-      hours = Math.floor(duration / 3600)
-      minutes = Math.floor((duration/60)%60)
-      seconds = duration % 60;
-    }
 </script>
 
 <div
@@ -68,7 +44,7 @@
     style={cssVarStyles}
 >
     <PlayerClock {army} {durationLeft} {playerName} {active}/>
-    <PointTracker secondaries={["Raise the banners", "Psychic interrigation", "Take no prisoners"]}/>
+    <PointTracker secondaries={["Secondary 1", "Secondary 2", "Secondary 3"]}/>
 </div>
 
 <style lang="postcss">
