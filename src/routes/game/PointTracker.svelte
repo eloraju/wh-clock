@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { match } from "ts-pattern";
-
     export let secondaries: string[];
     let primary = Array(5).fill(0);
     let tertiary = Array(5).fill(0);
@@ -10,33 +8,9 @@
 
     $: objectives = ["Primary", "Secondary", ...secondaries];
     $: primaryPoints = primary.reduce((sum, cur,index) => sum += Math.min(15, cur + tertiary[index]))
-
-    type Objective = "pri" | "tert" | "s1" | "s2" | "s3";
-
-    function addPoint(obj: Objective, turn: number, points: number) {
-        match(obj)
-            .with("pri", () => {
-                primary[turn] = points;
-            })
-            .with("tert", () => {
-                tertiary[turn] = points;
-            })
-            .with("s1", () => {
-                secondary1[turn] = points;
-            })
-            .with("s2", () => {
-                secondary2[turn] = points;
-            })
-            .with("s3", () => {
-                secondary3[turn] = points;
-            })
-            .exhaustive();
-        console.log("should have changed");
-    }
-
-    function calculatePoints(turns: number[]): number {
-        return turns.reduce((sum, cur) => sum += cur)
-    }
+    $: secondary1Points = secondary1.reduce((sum, cur) => sum+=cur)
+    $: secondary2Points = secondary1.reduce((sum, cur) => sum+=cur)
+    $: secondary3Points = secondary1.reduce((sum, cur) => sum+=cur)
 </script>
 
 <div class="grid points-area gap-y-3 gap-x-2 bg-slate-500 rounded-md shadow-md w-full p-5 text-sm text-center">
@@ -69,9 +43,9 @@
     <!--Summary row-->
     <div class="turn-col" />
     <div class="footer-row primary-score">{primaryPoints} / 45</div>
-    <div class="footer-row">{calculatePoints(secondary1)} / 15</div>
-    <div class="footer-row">{calculatePoints(secondary2)} / 15</div>
-    <div class="footer-row">{calculatePoints(secondary3)} / 15</div>
+    <div class="footer-row">{secondary1Points} / 15</div>
+    <div class="footer-row">{secondary2Points} / 15</div>
+    <div class="footer-row">{secondary3Points} / 15</div>
 </div>
 
 <style lang="postcss">
