@@ -1,10 +1,11 @@
 <script lang="ts">
     export let players: string[];
     export let disabled = true;
-    export let startingPlayer: "A" | "B" | "" = "";
+    export let startingPlayer: "A" | "B" | undefined;
 </script>
 
 {#if !disabled}
+Select starting player
     <label>
         <input
             type="radio"

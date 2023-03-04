@@ -1,5 +1,7 @@
 <script lang="ts">
     import type { Army } from "$lib/assets/icons/armies";
+    import { gameStateStore } from "$lib/stores/stateStore";
+    import type { GameState } from "$lib/types";
     import PlayerClock from "./PlayerClock.svelte";
     import PointTracker from "./PointTracker.svelte";
     export let active = false;
@@ -7,6 +9,8 @@
     export let durationLeft: number;
     export let army: Army;
 
+    let gameState: GameState;
+    gameStateStore.subscribe(state => gameState = state);
 
     // Coloring variables
     let activeBg = army.colors?.activeBg ?? "#060";
