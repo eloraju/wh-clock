@@ -8,9 +8,9 @@
 
     $: objectives = ["Primary", "Secondary", ...secondaries];
     $: primaryPoints = primary.reduce((sum, cur,index) => sum += Math.min(15, cur + tertiary[index]))
-    $: secondary1Points = secondary1.reduce((sum, cur) => sum+=cur)
-    $: secondary2Points = secondary1.reduce((sum, cur) => sum+=cur)
-    $: secondary3Points = secondary1.reduce((sum, cur) => sum+=cur)
+    $: secondary1Points = secondary1.reduce((sum, cur) => Math.min(sum+=cur, 15))
+    $: secondary2Points = secondary2.reduce((sum, cur) => Math.min(sum+=cur,15))
+    $: secondary3Points = secondary3.reduce((sum, cur) => Math.min(sum+=cur,15))
 </script>
 
 <div class="grid points-area gap-y-3 gap-x-2 bg-slate-500 rounded-md shadow-md w-full p-5 text-sm text-center">

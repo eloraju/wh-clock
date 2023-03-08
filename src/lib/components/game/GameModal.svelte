@@ -1,19 +1,37 @@
 <script lang="ts">
     import Modal from "$lib/components/Modal.svelte";
     import { gameStateStore } from "$lib/stores/stateStore";
-    import type { Player, State } from "$lib/types";
+    import type { State } from "$lib/types";
+    import { match } from "ts-pattern";
 
     export let showModal: boolean;
 
     let gameState: State;
-    let playerAfterPause: Player;
-    let startingPlayerName: string;
+    let nextPlayerName: string;
 
-    gameStateStore.subscribe((state) => {
-        gameState = state.state as State;
-        startingPlayerName = state.startingPlayer;
-        playerAfterPause = state.turnBeforePause;
-    });
+    gameStateStore.subscribe(
+        ({ state, playerA, playerB, turnBeforePause, startingPlayer }) => {
+            match(state)
+                .with(
+                    "INIT",
+                    () =>
+                        (nextPlayerName =
+                            startingPlayer === "A"
+                                ? playerA.playerName
+                                : playerB.playerName)
+                )
+                .with(
+                    "PAUSE",
+                    () =>
+                        (nextPlayerName =
+                            turnBeforePause === "A"
+                                ? playerA.playerName
+                                : playerB.playerName)
+                )
+                .otherwise(()=>{});
+            gameState = state;
+        }
+    );
 </script>
 
 {#if showModal}
@@ -30,12 +48,12 @@
         <div slot="body">
             {#if gameState === "INIT"}
                 <p>Press space or enter to start the game</p>
-                <p>{startingPlayerName} will have the first turn</p>
+                <p>{nextPlayerName} will have the first turn</p>
             {:else if gameState === "END"}
                 The match has concluded
             {:else if gameState === "PAUSE"}
                 <p>Time to empty thine bladder</p>
-                <p>{playerAfterPause} will continue</p>
+                <p>{nextPlayerName} will continue</p>
             {/if}
         </div>
     </Modal>

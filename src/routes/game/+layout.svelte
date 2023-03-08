@@ -11,6 +11,7 @@
         return `${gameState.roundNumber} - ${gameState.turnNumber}`;
     };
 </script>
+<div class="h-screen flex flex-col">
 <div
     class="flex flex-col h-16 bg-green-800 text-center text-xl font-bold italic"
 >
@@ -35,3 +36,4 @@
     {/if}
 </div>
 <slot/>
+</div>

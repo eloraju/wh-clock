@@ -16,10 +16,7 @@
     let gameState: GameState;
     gameStateStore.subscribe((state) => (gameState = state));
 
-    $: startingPlayerName =
-        gameState.startingPlayer === "A"
-            ? gameState.playerA.playerName
-            : gameState.playerB.playerName;
+    $: showModal = ["INIT", "PAUSE"].includes(gameState.state);
 
     let playerAGameTimer = gameState.playerA.timer;
     let playerBGameTimer = gameState.playerB.timer;
@@ -29,9 +26,6 @@
     let armyBData: Army = armies.find(
         (a) => gameState.playerB.armyName === a.name
     ) as Army;
-
-    let showModal = true;
-
 
     const ticker = setInterval(() => {
         match(gameState.state)
@@ -47,11 +41,6 @@
             .otherwise(() => {});
     }, 1000);
 
-    function togglePauseAndHideModal() {
-        showModal = !showModal;
-        togglePause(gameState);
-    }
-
     function handleKeyPress(event: KeyboardEvent) {
         if (event.repeat) return;
 
@@ -59,19 +48,19 @@
             .with("Space", () => {
                 event.preventDefault();
                 match(gameState.state)
-                    .with("INIT", () => togglePauseAndHideModal())
-                    .with("PAUSE", () => togglePauseAndHideModal())
+                    .with("INIT", () => togglePause(gameState))
+                    .with("PAUSE", () => togglePause(gameState))
                     .otherwise(() => switchPlayerTurn(gameState));
             })
             .with("Escape", () => {
                 event.preventDefault();
-                togglePauseAndHideModal();
+                togglePause(gameState);
             })
             .with("Enter", () => {
                 event.preventDefault();
                 match(gameState.state)
-                    .with("INIT", () => togglePauseAndHideModal())
-                    .with("PAUSE", () => togglePauseAndHideModal())
+                    .with("INIT", () => togglePause(gameState))
+                    .with("PAUSE", () => togglePause(gameState))
                     .otherwise(() => advanceRound(gameState));
             })
             .run();
@@ -80,17 +69,17 @@
 
 <svelte:window on:keydown={handleKeyPress} />
 <div class="h-full flex flex-row">
-    <PlayerContainer
-        active={gameState.state === "A"}
-        playerName={gameState.playerA.playerName}
-        bind:durationLeft={playerAGameTimer}
-        army={armyAData}
-    />
-    <PlayerContainer
-        active={gameState.state === "B"}
-        playerName={gameState.playerB.playerName}
-        bind:durationLeft={playerBGameTimer}
-        army={armyBData}
-    />
+<PlayerContainer
+    active={gameState.state === "A"}
+    playerName={gameState.playerA.playerName}
+    bind:durationLeft={playerAGameTimer}
+    army={armyAData}
+/>
+<PlayerContainer
+    active={gameState.state === "B"}
+    playerName={gameState.playerB.playerName}
+    bind:durationLeft={playerBGameTimer}
+    army={armyBData}
+/>
 </div>
-<GameModal showModal/>
+<GameModal {showModal}/>
