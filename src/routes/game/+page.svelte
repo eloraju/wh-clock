@@ -5,21 +5,18 @@
     import { armies, type Army } from "../../lib/assets/icons/armies.js";
     import {
         advanceRound,
+        decrementClock,
         gameStateStore,
         switchPlayerTurn,
         togglePause,
     } from "$lib/stores/stateStore.js";
     import type { GameState } from "$lib/types.js";
 
-    console.log(JSON.stringify(gameStateStore));
-
     let gameState: GameState;
     gameStateStore.subscribe((state) => (gameState = state));
 
     $: showModal = ["INIT", "PAUSE"].includes(gameState.state);
 
-    let playerAGameTimer = gameState.playerA.timer;
-    let playerBGameTimer = gameState.playerB.timer;
     let armyAData: Army = armies.find(
         (a) => a.name === gameState.playerA.armyName
     ) as Army;
@@ -29,16 +26,12 @@
 
     const ticker = setInterval(() => {
         match(gameState.state)
-            .with("A", () => {
-                playerAGameTimer = Math.max(0, playerAGameTimer - 1);
-            })
-            .with("B", () => {
-                playerBGameTimer = Math.max(0, playerBGameTimer - 1);
-            })
             .with("END", () => {
                 clearInterval(ticker);
             })
-            .otherwise(() => {});
+            .otherwise(() => {
+                decrementClock();
+            });
     }, 1000);
 
     function handleKeyPress(event: KeyboardEvent) {
@@ -48,20 +41,20 @@
             .with("Space", () => {
                 event.preventDefault();
                 match(gameState.state)
-                    .with("INIT", () => togglePause(gameState))
-                    .with("PAUSE", () => togglePause(gameState))
-                    .otherwise(() => switchPlayerTurn(gameState));
+                    .with("INIT", () => togglePause())
+                    .with("PAUSE", () => togglePause())
+                    .otherwise(() => switchPlayerTurn());
             })
             .with("Escape", () => {
                 event.preventDefault();
-                togglePause(gameState);
+                togglePause();
             })
             .with("Enter", () => {
                 event.preventDefault();
                 match(gameState.state)
-                    .with("INIT", () => togglePause(gameState))
-                    .with("PAUSE", () => togglePause(gameState))
-                    .otherwise(() => advanceRound(gameState));
+                    .with("INIT", () => togglePause())
+                    .with("PAUSE", () => togglePause())
+                    .otherwise(() => advanceRound());
             })
             .run();
     }
@@ -71,14 +64,12 @@
 <div class="h-full flex flex-row">
 <PlayerContainer
     active={gameState.state === "A"}
-    playerName={gameState.playerA.playerName}
-    bind:durationLeft={playerAGameTimer}
+    player={gameState.playerA}
     army={armyAData}
 />
 <PlayerContainer
     active={gameState.state === "B"}
-    playerName={gameState.playerB.playerName}
-    bind:durationLeft={playerBGameTimer}
+    player={gameState.playerB}
     army={armyBData}
 />
 </div>

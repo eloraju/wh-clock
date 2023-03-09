@@ -1,60 +1,96 @@
 import type { GameState, Player, State } from "$lib/types";
 import { type Writable, writable } from "svelte/store";
+import { match } from "ts-pattern";
 
 export const gameStateStore: Writable<GameState> = writable();
 
-export function advanceRound(gameState: GameState): void {
-    let turnNumber: number;
-    let roundNumber: number;
-    if (gameState.turnNumber === 2) {
-        if (gameState.roundNumber === 5) {
-            gameStateStore.set({
-                ...gameState,
-                state: "END",
-            });
-            return;
+export function advanceRound(): void {
+    gameStateStore.update((oldState) => {
+        let turnNumber: number;
+        let roundNumber: number;
+        if (oldState.turnNumber === 2) {
+            if (oldState.roundNumber === 5) {
+                return {
+                    ...oldState,
+                    state: "END",
+                };
+            }
+            turnNumber = 1;
+            roundNumber = Math.min(oldState.roundNumber + 1, 5);
+        } else {
+            turnNumber = 2;
+            roundNumber = oldState.roundNumber;
         }
-        turnNumber = 1;
-        roundNumber = Math.min(gameState.roundNumber + 1, 5);
-    } else {
-        turnNumber = 2;
-        roundNumber = gameState.roundNumber;
-    }
-    // TS doesn't know what the number from here could be even though we clamp
-    // the number to 5
-    gameStateStore.set({
-        ...gameState,
-        roundNumber,
-        turnNumber,
+        return {
+            ...oldState,
+            roundNumber,
+            turnNumber,
+        };
     });
 }
 
-export function switchPlayerTurn(gameState: GameState): Error | void {
-    const state = gameState.state === "A" ? "B" : "A";
-    gameStateStore.set({
-        ...gameState,
-        state,
+export function switchPlayerTurn(): Error | void {
+    gameStateStore.update((gameState) => {
+        const state = gameState.state === "A" ? "B" : "A";
+        return {
+            ...gameState,
+            state,
+        };
     });
 }
 
-export function togglePause(gameState: GameState) {
-    let newState: GameState;
-    if (gameState.state === "PAUSE" || gameState.state === "INIT") {
-        newState = {
-            ...gameState,
-            state: gameState.turnBeforePause,
-        };
-    } else {
-        newState = {
-            ...gameState,
-            turnBeforePause: gameState.state,
-            state: "PAUSE",
-        };
-    }
-    gameStateStore.set(newState);
+export function togglePause() {
+    gameStateStore.update((gameState) => {
+        let newState: GameState;
+        if (gameState.state === "PAUSE" || gameState.state === "INIT") {
+            newState = {
+                ...gameState,
+                state: gameState.turnBeforePause,
+            };
+        } else {
+            newState = {
+                ...gameState,
+                turnBeforePause: gameState.state,
+                state: "PAUSE",
+            };
+        }
+        return newState;
+    });
 }
 
-export function decrementClock(gameState: GameState) {}
+export function setSecondaryPoints(
+    objective: "s1" | "s2" | "s3" | "pri" | "ter",
+    newPoints: number,
+    turn: number
+) {
+    gameStateStore.update((oldState) => {
+        return oldState;
+    });
+}
+
+export function decrementClock() {
+    gameStateStore.update((gameState) => {
+        if (gameState.state === "A") {
+            return {
+                ...gameState,
+                playerA: {
+                    ...gameState.playerA,
+                    timer: gameState.playerA.timer - 1,
+                },
+            };
+        } else if (gameState.state === "B") {
+            return {
+                ...gameState,
+                playerB: {
+                    ...gameState.playerB,
+                    timer: gameState.playerB.timer - 1,
+                },
+            };
+        }
+
+        return gameState;
+    });
+}
 
 export function createPlayer(
     name: string,

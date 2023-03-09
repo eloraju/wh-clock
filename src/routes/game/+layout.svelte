@@ -16,12 +16,12 @@
     class="flex flex-col h-16 bg-green-800 text-center text-xl font-bold italic"
 >
     {#if gameState.state !== "END"}
-        <button on:click={() => advanceRound(gameState)}>{turnString()}</button>
+        <button on:click={() => advanceRound()}>{turnString()}</button>
         <div class="flex flex-row gap-6 justify-center">
             {#if gameState.state !== "PAUSE"}
                 <button
                     on:click={() => {
-                        switchPlayerTurn(gameState);
+                        switchPlayerTurn();
                     }}>Switch active player</button
                 >
             {/if}
