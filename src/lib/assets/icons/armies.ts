@@ -59,3 +59,5 @@ export const armies: Army[] = [
   {name: "T’au Empire", icon: tau},
   {name: "Tyranids", icon: nids},
 ]
+
+export const armyNames = armies.map(a => a.name);

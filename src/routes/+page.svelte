@@ -1,19 +1,17 @@
 <script lang="ts">
     import TextInput from "$lib/components/TextInput.svelte";
-    import StartPicker from "$lib/components/StartPicker.svelte";
-    import DurationPicker from "$lib/components/DurationPicker.svelte";
-    import SelectInput from "../lib/components/SelectInput.svelte";
-    import {armies} from '$lib/assets/icons/armies.ts'
-
-    const armyNames = armies.map(a => a.name).sort();
+    import DurationPicker from "$lib/components/newGame/DurationPicker.svelte";
+    import SelectInput from "$lib/components/SelectInput.svelte";
+    import StartPicker from "$lib/components/newGame/StartPicker.svelte";
+    import {armyNames} from '$lib/assets/icons/armies'
 
     let playerAName: string;
     let playerBName: string;
     // These are not actually used and can be deleted at some point :)
     let playerAArmy: string;
     let playerBArmy: string;
-    let duration: string;
-    let startingPlayer: string;
+    let duration: number;
+    let startingPlayer: "A" | "B";
     let oldGameID: string;
 
     $: players = [playerAName, playerBName];
