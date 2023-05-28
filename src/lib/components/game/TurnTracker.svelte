@@ -1,0 +1,1 @@
+<!-- Add a sidebar or topbar that tracks the progress of the game. Maybe visualize the timers here as well? -->

@@ -10,17 +10,17 @@
 
   function handleKeydown(event: KeyboardEvent) {
     if(event.key === "Escape")  {
-      console.log("Escape pressed?")
       close();
       return;
     }
   }
+
 </script>
 
 
-<svelte:window on:keydown={handleKeydown}/>
+<svelte:window />
 <!-- svelte-ignore ally-autofocus -->
-<div class="modal-bg"></div>
+<div class="modal-bg" on:click={close} on:keydown={handleKeydown}></div>
 
 <div class="modal flex flex-col" role="dialog" bind:this={modal}>
   <slot name="header"></slot>

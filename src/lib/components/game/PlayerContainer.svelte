@@ -1,12 +1,12 @@
 <script lang="ts">
     import type { Army } from "$lib/assets/icons/armies";
+    import type { Player } from "$lib/types";
     import PlayerClock from "./PlayerClock.svelte";
-    import PointTracker from "./PointTracker.svelte";
     export let active = false;
-    export let playerName = "NONAME";
-    export let durationLeft: number;
     export let army: Army;
+    export let player: Player;
 
+    $: durationLeft = player.timer;
 
     // Coloring variables
     let activeBg = army.colors?.activeBg ?? "#060";
@@ -43,8 +43,7 @@
     class:overtime={goneOver}
     style={cssVarStyles}
 >
-    <PlayerClock {army} {durationLeft} {playerName} {active}/>
-    <PointTracker secondaries={["Secondary 1", "Secondary 2", "Secondary 3"]}/>
+    <PlayerClock {army} {durationLeft} playerName={player.playerName} {active}/>
 </div>
 
 <style lang="postcss">
