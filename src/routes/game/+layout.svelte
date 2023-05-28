@@ -24,12 +24,12 @@
                         switchPlayerTurn();
                     }}>Switch active player</button
                 >
-            {/if}
             <button
                 on:click={() => {
-                    togglePause(gameState);
-                }}>{gameState.state === "PAUSE" ? "Resume" : "Pause"}</button
+                    togglePause();
+                }}>Pause</button
             >
+            {/if}
         </div>
     {:else}
         <span class="text-xl font-bold">THE END</span>

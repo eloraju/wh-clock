@@ -1,6 +1,6 @@
 <script lang="ts">
     import Modal from "$lib/components/Modal.svelte";
-    import { gameStateStore } from "$lib/stores/stateStore";
+    import { gameStateStore, togglePause } from "$lib/stores/stateStore";
     import type { State } from "$lib/types";
     import { match } from "ts-pattern";
 
@@ -32,10 +32,17 @@
             gameState = state;
         }
     );
+
+    function handleClose() {
+        match(gameState)
+        .with("PAUSE", togglePause)
+        .with("INIT", togglePause)
+        .otherwise(() => {})
+    }
 </script>
 
 {#if showModal}
-    <Modal>
+    <Modal on:close={handleClose}>
         <div slot="header" class="h-12 bg-blue-800 text-white">
             {#if gameState === "INIT"}
                 Ready yourselves!

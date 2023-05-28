@@ -2,7 +2,6 @@
     import type { Army } from "$lib/assets/icons/armies";
     import type { Player } from "$lib/types";
     import PlayerClock from "./PlayerClock.svelte";
-    import PointTracker from "./PointTracker.svelte";
     export let active = false;
     export let army: Army;
     export let player: Player;
@@ -45,7 +44,6 @@
     style={cssVarStyles}
 >
     <PlayerClock {army} {durationLeft} playerName={player.playerName} {active}/>
-    <PointTracker {player}/>
 </div>
 
 <style lang="postcss">

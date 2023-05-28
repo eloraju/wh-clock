@@ -15,7 +15,7 @@
     // this gets called any time durationLeft changes
     $: _ = calculateTimes(durationLeft)
 
-    function prefixWith0(num: Number): string {
+    function prefixWith0(num: number): string {
         if (num < 10) {
             return `0${num}`;
         }
@@ -29,9 +29,9 @@
     }
 </script>
 
-<div class="relative flex gap-4 flex-col justify-start text-center">
-    <h1 class="font-bold text-7xl z-10">{playerName}</h1>
-    <h2 class="font-light text-3xl z-10">{army.name}</h2>
+<div class="relative flex gap-4 flex-col justify-start text-center m-auto">
+    <h1 class="font-bold text-9xl z-10">{playerName}</h1>
+    <h2 class="font-light text-4xl z-10">{army.name}</h2>
     {#if active}
         <img
             class="opacity-20 z-0 absolute self-center h-full"
@@ -39,7 +39,7 @@
             alt="Active player"
         />
     {/if}
-    <div class="z-10"
+    <div class="z-10 text-9xl"
         >{prefixWith0(hours)}:{prefixWith0(minutes)}:{prefixWith0(
             seconds
         )}</div

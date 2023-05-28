@@ -58,19 +58,31 @@
             })
             .run();
     }
+
+    function handlePlayAreaClick() {
+        match(gameState.state)
+            .with("INIT", togglePause)
+            .with("PAUSE", togglePause)
+            .otherwise(switchPlayerTurn);
+    }
 </script>
 
 <svelte:window on:keydown={handleKeyPress} />
-<div class="h-full flex flex-row">
-<PlayerContainer
-    active={gameState.state === "A"}
-    player={gameState.playerA}
-    army={armyAData}
-/>
-<PlayerContainer
-    active={gameState.state === "B"}
-    player={gameState.playerB}
-    army={armyBData}
-/>
+<div
+    class="h-full flex flex-row"
+    on:click={handlePlayAreaClick}
+    on:keydown={console.log}
+>
+    <PlayerContainer
+        active={gameState.state === "A"}
+        player={gameState.playerA}
+        army={armyAData}
+    />
+    <PlayerContainer
+        active={gameState.state === "B"}
+        player={gameState.playerB}
+        army={armyBData}
+    />
 </div>
-<GameModal {showModal}/>
+<GameModal {showModal} on:close={togglePause}/>
+
